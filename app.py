@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from datetime import datetime
 
 # 1. Full Dataset
 data = {
@@ -41,3 +42,7 @@ else:
 fig = px.line(filtered_df, x="Weekend", y="Attendance", color="Location", markers=True,
               title=f"Attendance Trends: {selected_town}")
 st.plotly_chart(fig, use_container_width=True)
+
+st.markdown("---") # This adds a horizontal divider line
+now = datetime.now().strftime("%B %d, %Y at %I:%M %p")
+st.caption(f"App Last Refreshed: {now}")
