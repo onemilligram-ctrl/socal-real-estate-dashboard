@@ -4,20 +4,28 @@ import plotly.express as px
 from datetime import datetime
 import pytz
 
-# 1. Page Configuration (FORCES SIDEBAR OPEN)
+# 1. Page Configuration (Set to expanded by default)
 st.set_page_config(
     page_title="Compass SoCal Trends", 
     layout="wide",
     initial_sidebar_state="expanded" 
 )
 
-# 2. Interface Cleanup
+# 2. Updated Interface Cleanup (Hides GitHub, but KEEPS Sidebar visible)
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;} 
             footer {visibility: hidden;}    
-            header {visibility: hidden;}    
             .stAppDeployButton {display:none;} 
+            
+            /* This forces the sidebar to stay open and visible */
+            [data-testid="stSidebar"] {
+                display: block !important;
+                visibility: visible !important;
+                min-width: 250px !important;
+            }
+            
+            /* Removes the extra gap at the top */
             .stAppViewMain {padding-top: 0rem;}
             </style>
             """
@@ -54,16 +62,13 @@ data = {
 df = pd.DataFrame(data)
 df_melted = df.melt(id_vars=["Location"], var_name="Weekend", value_name="Attendance")
 
-# 6. Sidebar UI (The Dropdown Menu)
-# Content inside this 'with' block forces the sidebar to render
+# 6. Sidebar UI
+# Content here guarantees the sidebar has elements to show
 with st.sidebar:
     st.header("Dashboard Filters")
     towns = sorted(df["Location"].unique())
     selected_town = st.selectbox("Select a Location:", ["All Towns"] + towns)
-    
-    # Adding a little spacing
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    st.info("Use the dropdown above to filter the chart data.")
+    st.info("The chart will update automatically based on your selection.")
 
 # 7. Filtering Logic
 if selected_town == "All Towns":
