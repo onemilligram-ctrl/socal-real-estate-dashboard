@@ -4,10 +4,10 @@ import plotly.express as px
 from datetime import datetime
 import pytz
 
-# 1. Page Configuration (This must stay at the very top)
+# 1. Page Configuration
 st.set_page_config(page_title="Compass SoCal Trends", layout="wide")
 
-# 2. Interface Cleanup (Hiding GitHub icon, Hamburger menu, and Header)
+# 2. Interface Cleanup
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;} 
@@ -19,15 +19,16 @@ hide_st_style = """
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
-# 3. Header & Branding (Your Logo)
+# 3. Header & Branding
 col1, _ = st.columns([1, 4])
 with col1:
     logo_url = "https://raw.githubusercontent.com/onemilligram-ctrl/socal-real-estate-dashboard/main/Compass_Logo_H_W.png"
     st.image(logo_url, width=200)
 
 st.markdown("---")
+st.title("🏡 SoCal Open House Attendance Dashboard")
 
-# 1. Full Dataset
+# 4. Full Dataset
 data = {
     "Location": [
         "Beverly Hills & Surrounding", "Westside", "Pasadena & SGV",
@@ -45,29 +46,26 @@ data = {
     "Jan 17-18": [5.60, 9.59, 9.47, 12.23, 8.42, 7.07, 12.92, 1.00, 8.19, 4.85, 5.67, 0.00, 22.33]
 }
 
-# 2. Transform Data
+# 5. Transform Data
 df = pd.DataFrame(data)
 df_melted = df.melt(id_vars=["Location"], var_name="Weekend", value_name="Attendance")
 
-# 3. Sidebar UI
-st.set_page_config(page_title="SoCal Attendance Trends", layout="wide")
-st.title("🏡 SoCal Open House Attendance Dashboard")
-
+# 6. Sidebar UI
 towns = sorted(df["Location"].unique())
 selected_town = st.sidebar.selectbox("Select a Town to View:", ["All Towns"] + towns)
 
-# 4. Filtering Logic
+# 7. Filtering Logic
 if selected_town == "All Towns":
     filtered_df = df_melted
 else:
     filtered_df = df_melted[df_melted["Location"] == selected_town]
 
-# 5. Chart
+# 8. Chart
 fig = px.line(filtered_df, x="Weekend", y="Attendance", color="Location", markers=True,
               title=f"Attendance Trends: {selected_town}")
 st.plotly_chart(fig, use_container_width=True)
 
-# Automatic Timestamp in Pacific Time
+# 9. Automatic Timestamp in Pacific Time
 st.markdown("---")
 tz = pytz.timezone('US/Pacific') 
 now = datetime.now(tz).strftime("%B %d, %Y at %I:%M %p")
