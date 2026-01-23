@@ -11,7 +11,7 @@ col1, col2 = st.columns([1, 4])
 
 with col1:
     # This looks for the file you just uploaded to GitHub
-    st.image("compass_logo.png", width=200) 
+    st.image("https://github.com/onemilligram-ctrl/socal-real-estate-dashboard/blob/main/Compass_Logo_H_W.png?raw=true", width=200) 
 
 with col2:
     st.title("Compass SoCal Real Estate")
