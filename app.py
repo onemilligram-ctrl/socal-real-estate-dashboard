@@ -79,7 +79,7 @@ st.markdown("---")
 st.title("🏡 SoCal Open House Attendance Dashboard")
 
 # 5. Data Processing & Filter
-df_melted = df.melt(id_vars=["Location"], var_name="Weekend", value_name="Attendance")
+df_melted = df.melt(id_vars=["Location"], var_name="Weekend", value_name="Average Attendance")
 filtered_df = df_melted if selected_town == "All Towns" else df_melted[df_melted["Location"] == selected_town]
 
 # 6. Chart Logic
