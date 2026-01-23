@@ -11,7 +11,7 @@ st.set_page_config(
 
 # --- MANUAL DATA UPDATE DATE ---
 # Update this string whenever you add new weekend data to the 'data' dictionary below
-LAST_DATA_UPDATE = "January 18, 2025" 
+LAST_DATA_UPDATE = "January 22, 2025" 
 
 # 2. Sidebar UI & Toggle Logic
 with st.sidebar:
