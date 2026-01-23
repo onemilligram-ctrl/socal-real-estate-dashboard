@@ -53,22 +53,17 @@ else:
 
 theme_css = f"""
     <style>
-    /* Global Background and Global Font Color Force */
     .stApp, .stApp p, .stApp h1, .stApp h2, .stApp h3, .stApp span, .stApp label {{
         background-color: {bg_color};
         color: {text_color} !important;
     }}
-    
     [data-testid="stSidebar"] {{
         background-color: {bg_color};
         border-right: 1px solid #444;
     }}
-
-    /* Sidebar specific text colors */
     [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {{
         color: {text_color} !important;
     }}
-
     #MainMenu {{visibility: hidden;}} 
     footer {{visibility: hidden;}}    
     .stAppDeployButton {{display:none;}} 
@@ -106,13 +101,23 @@ fig = px.line(
     template=chart_template
 )
 
-# Force the chart internals to match the theme
+# FORCE CHART FONT COLORS
 fig.update_layout(
     paper_bgcolor=bg_color,
     plot_bgcolor=bg_color,
-    font_color=text_color,
-    xaxis=dict(gridcolor='#444' if dark_mode else '#eee'),
-    yaxis=dict(gridcolor='#444' if dark_mode else '#eee')
+    font=dict(color=text_color), # Targets legend and global chart text
+    title=dict(font=dict(color=text_color)), # Specifically targets title
+    legend=dict(font=dict(color=text_color)), # Specifically targets legend
+    xaxis=dict(
+        title_font=dict(color=text_color),
+        tickfont=dict(color=text_color),
+        gridcolor='#444' if dark_mode else '#eee'
+    ),
+    yaxis=dict(
+        title_font=dict(color=text_color),
+        tickfont=dict(color=text_color),
+        gridcolor='#444' if dark_mode else '#eee'
+    )
 )
 
 st.plotly_chart(fig, use_container_width=True)
