@@ -4,8 +4,12 @@ import plotly.express as px
 from datetime import datetime
 import pytz
 
-# 1. Page Configuration
-st.set_page_config(page_title="Compass SoCal Trends", layout="wide")
+# 1. Page Configuration (FORCES SIDEBAR OPEN)
+st.set_page_config(
+    page_title="Compass SoCal Trends", 
+    layout="wide",
+    initial_sidebar_state="expanded" 
+)
 
 # 2. Interface Cleanup
 hide_st_style = """
@@ -51,11 +55,15 @@ df = pd.DataFrame(data)
 df_melted = df.melt(id_vars=["Location"], var_name="Weekend", value_name="Attendance")
 
 # 6. Sidebar UI (The Dropdown Menu)
+# Content inside this 'with' block forces the sidebar to render
 with st.sidebar:
-    st.header("Filters")
-    # Pulls unique locations and adds an 'All Towns' option
+    st.header("Dashboard Filters")
     towns = sorted(df["Location"].unique())
     selected_town = st.selectbox("Select a Location:", ["All Towns"] + towns)
+    
+    # Adding a little spacing
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.info("Use the dropdown above to filter the chart data.")
 
 # 7. Filtering Logic
 if selected_town == "All Towns":
