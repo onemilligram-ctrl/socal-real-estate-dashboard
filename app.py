@@ -21,7 +21,6 @@ with st.sidebar:
     st.markdown("---")
     st.header("Filters")
     
-    # We define 'data' early so the sidebar can see it
     data = {
         "Location": [
             "Beverly Hills & Surrounding", "Westside", "Pasadena & SGV",
@@ -40,23 +39,22 @@ with st.sidebar:
     }
     df = pd.DataFrame(data)
     towns = sorted(df["Location"].unique())
-    selected_town = st.selectbox("Select a Location:", ["All Towns"] + towns)
+    selected_town = st.sidebar.selectbox("Select a Location:", ["All Towns"] + towns)
 
-# 3. Dynamic CSS for Theme Switching
+# 3. Dynamic CSS & Chart Theme Switching
 if dark_mode:
-    primary_color = "#FFFFFF"
     bg_color = "#0E1117"
     text_color = "#FFFFFF"
-    chart_template = "plotly_dark"
+    chart_template = "plotly_dark"  # Forces the graph to be dark
+    plot_bg = "#0E1117"
 else:
-    primary_color = "#000000"
     bg_color = "#FFFFFF"
     text_color = "#000000"
-    chart_template = "plotly_white"
+    chart_template = "plotly_white" # Forces the graph to be light
+    plot_bg = "#FFFFFF"
 
 theme_css = f"""
     <style>
-    /* Force background and text colors */
     .stApp {{
         background-color: {bg_color};
         color: {text_color};
@@ -76,8 +74,6 @@ st.markdown(theme_css, unsafe_allow_html=True)
 # 4. Header & Branding
 col1, _ = st.columns([1, 4])
 with col1:
-    # Note: If the logo is black text, it may disappear in Dark Mode. 
-    # Usually, a white/transparent logo is best for both.
     logo_url = "https://raw.githubusercontent.com/onemilligram-ctrl/socal-real-estate-dashboard/main/Compass_Logo_H_W.png"
     st.image(logo_url, width=200)
 
@@ -101,8 +97,16 @@ fig = px.line(
     color="Location", 
     markers=True,
     title=f"Attendance Trends: {selected_town}",
-    template=chart_template
+    template=chart_template # This applies the dark/light mode
 )
+
+# Deep Customization: Ensure plot background matches the app background exactly
+fig.update_layout(
+    paper_bgcolor=bg_color,
+    plot_bgcolor=plot_bg,
+    font_color=text_color
+)
+
 st.plotly_chart(fig, use_container_width=True)
 
 # 8. Automatic Timestamp in Pacific Time
