@@ -15,7 +15,6 @@ with col1:
 
 with col2:
     st.title("Compass SoCal Real Estate")
-    st.subheader("Regional Open House Attendance Insights")
 
 st.markdown("---") # Adds a divider line under the header
 # 1. Full Dataset
