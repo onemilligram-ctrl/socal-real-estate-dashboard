@@ -50,9 +50,12 @@ data = {
 df = pd.DataFrame(data)
 df_melted = df.melt(id_vars=["Location"], var_name="Weekend", value_name="Attendance")
 
-# 6. Sidebar UI
-towns = sorted(df["Location"].unique())
-selected_town = st.sidebar.selectbox("Select a Town to View:", ["All Towns"] + towns)
+# 6. Sidebar UI (The Dropdown Menu)
+with st.sidebar:
+    st.header("Filters")
+    # Pulls unique locations and adds an 'All Towns' option
+    towns = sorted(df["Location"].unique())
+    selected_town = st.selectbox("Select a Location:", ["All Towns"] + towns)
 
 # 7. Filtering Logic
 if selected_town == "All Towns":
