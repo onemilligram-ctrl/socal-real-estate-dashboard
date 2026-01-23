@@ -49,6 +49,8 @@ st.markdown("---")
 
 # ... rest of your code (Data loading, Sidebar filters, etc.) ...
 
+# ... rest of your code (Data loading, Sidebar filters, etc.) ...
+
 # 1. Full Dataset
 data = {
     "Location": [
