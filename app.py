@@ -3,17 +3,26 @@ import pandas as pd
 import plotly.express as px
 from datetime import datetime
 
-# 3. Header & Branding
-# This MUST be the first Streamlit command in your script
+# 1. Page Configuration (This must stay at the very top)
 st.set_page_config(page_title="Compass SoCal Trends", layout="wide")
 
-# We create the columns. We don't need a name for the second empty one.
-col1, _ = st.columns([1, 4]) 
+# 2. Interface Cleanup (Hiding GitHub icon, Hamburger menu, and Header)
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;} 
+            footer {visibility: hidden;}    
+            header {visibility: hidden;}    
+            .stAppDeployButton {display:none;} 
+            .stAppViewMain {padding-top: 0rem;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
 
+# 3. Header & Branding (Your Logo)
+col1, _ = st.columns([1, 4])
 with col1:
-    # Use the 'raw' version of the GitHub link so Streamlit can read the actual pixels
     logo_url = "https://raw.githubusercontent.com/onemilligram-ctrl/socal-real-estate-dashboard/main/Compass_Logo_H_W.png"
-    st.image(logo_url, width=200) 
+    st.image(logo_url, width=200)
 
 st.markdown("---")
 
