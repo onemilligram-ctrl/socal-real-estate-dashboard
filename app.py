@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from datetime import datetime
+import pytz
 
 # 1. Page Configuration (This must stay at the very top)
 st.set_page_config(page_title="Compass SoCal Trends", layout="wide")
@@ -66,6 +67,8 @@ fig = px.line(filtered_df, x="Weekend", y="Attendance", color="Location", marker
               title=f"Attendance Trends: {selected_town}")
 st.plotly_chart(fig, use_container_width=True)
 
-st.markdown("---") # This adds a horizontal divider line
-now = datetime.now().strftime("%B %d, %Y at %I:%M %p")
-st.caption(f"App Last Refreshed: {now}")
+# Automatic Timestamp in Pacific Time
+st.markdown("---")
+tz = pytz.timezone('US/Pacific') 
+now = datetime.now(tz).strftime("%B %d, %Y at %I:%M %p")
+st.caption(f"App Last Refreshed: {now} PT")
