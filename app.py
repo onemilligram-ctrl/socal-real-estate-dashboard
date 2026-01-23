@@ -4,10 +4,23 @@ import plotly.express as px
 from datetime import datetime
 import pytz
 
-# 1. Page Configuration (This must stay at the very top)
-st.set_page_config(page_title="Compass SoCal Trends", layout="wide")
+# 1. THE BRAINS (Imports)
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+from datetime import datetime
+import pytz
 
-# 2. Interface Cleanup (Hiding GitHub icon, Hamburger menu, and Header)
+# 2. THE FOUNDATION (Page Settings)
+# This must be the first 'st.' command!
+st.set_page_config(
+    page_title="Compass SoCal Trends", 
+    layout="wide",
+    initial_sidebar_state="expanded" # Keeps your menu visible by default
+)
+
+# 3. THE PAINT (Interface Cleanup)
+# This hides the GitHub logo, the hamburger menu, and the header bar
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;} 
@@ -19,7 +32,7 @@ hide_st_style = """
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
-# 3. Header & Branding (Your Logo)
+# 4. THE BRANDING (Your Logo)
 col1, _ = st.columns([1, 4])
 with col1:
     logo_url = "https://raw.githubusercontent.com/onemilligram-ctrl/socal-real-estate-dashboard/main/Compass_Logo_H_W.png"
