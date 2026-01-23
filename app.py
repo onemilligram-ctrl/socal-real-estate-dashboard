@@ -3,6 +3,21 @@ import pandas as pd
 import plotly.express as px
 from datetime import datetime
 
+# 3. Header & Branding
+st.set_page_config(page_title="SoCal Attendance Trends", layout="wide")
+
+# This creates two columns: a small one for a logo/icon and a large one for the title
+col1, col2 = st.columns([1, 5])
+
+with col1:
+    # You can replace this with a URL to your company logo later
+    st.write("## 🏠") 
+
+with col2:
+    st.title("Compass SoCal Real Estate")
+    st.subheader("Regional Open House Attendance Insights")
+
+st.markdown("---") # Adds a divider line under the header
 # 1. Full Dataset
 data = {
     "Location": [
