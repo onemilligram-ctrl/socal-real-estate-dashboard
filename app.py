@@ -14,7 +14,7 @@ with col1:
     st.write("## 🏠") 
 
 with col2:
-    st.title("Compass SoCal Real Estate")
+    st.title("Compass")
 
 st.markdown("---") # Adds a divider line under the header
 # 1. Full Dataset
