@@ -4,41 +4,50 @@ import plotly.express as px
 from datetime import datetime
 import pytz
 
-# 1. THE BRAINS (Imports)
-import streamlit as st
-import pandas as pd
-import plotly.express as px
-from datetime import datetime
-import pytz
-
-# 2. THE FOUNDATION (Page Settings)
-# This must be the first 'st.' command!
+# 1. THE FOUNDATION (Must be the first Streamlit command)
 st.set_page_config(
     page_title="Compass SoCal Trends", 
     layout="wide",
-    initial_sidebar_state="expanded" # Keeps your menu visible by default
+    initial_sidebar_state="expanded" 
 )
 
-# 3. THE PAINT (Interface Cleanup)
-# This hides the GitHub logo, the hamburger menu, and the header bar
+# 2. THE PAINT & LOCKS (Interface Cleanup)
+# This hides the GitHub/Streamlit menus and locks the sidebar open
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;} 
             footer {visibility: hidden;}    
             header {visibility: hidden;}    
             .stAppDeployButton {display:none;} 
+            
+            /* Hides the 'X' and '>' collapse buttons */
+            [data-testid="sidebar-collapsed-control"],
+            button[kind="headerNoContext"] {
+                display: none;
+            }
+
+            /* Forces the sidebar to stay visible and un-collapsible */
+            [data-testid="stSidebar"] {
+                min-width: 250px !important;
+                max-width: 250px !important;
+                display: flex !important;
+            }
+
+            /* Moves your content up to the very top since header is gone */
             .stAppViewMain {padding-top: 0rem;}
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
-# 4. THE BRANDING (Your Logo)
+# 3. THE BRANDING (Your Logo)
 col1, _ = st.columns([1, 4])
 with col1:
     logo_url = "https://raw.githubusercontent.com/onemilligram-ctrl/socal-real-estate-dashboard/main/Compass_Logo_H_W.png"
     st.image(logo_url, width=200)
 
 st.markdown("---")
+
+# ... rest of your code (Data loading, Sidebar filters, etc.) ...
 
 # 1. Full Dataset
 data = {
