@@ -1,51 +1,29 @@
-import streamlit as st
-import pandas as pd
-import plotly.express as px
-from datetime import datetime
-import pytz
+# 5. SIDEBAR FILTERS
+with st.sidebar:
+    st.header("Dashboard Filters")
+    
+    # 1. Get a unique, sorted list of locations from your 'Property Area' column
+    # We add "All Locations" at the top as the default view
+    location_list = ["All Locations"] + sorted(df_raw["Property Area"].unique().tolist())
+    
+    # 2. Create the dropdown menu
+    selected_location = st.selectbox(
+        "Select a Neighborhood:",
+        options=location_list,
+        index=0 # Sets 'All Locations' as the default
+    )
+    
+    st.markdown("---")
+    st.caption(f"Showing results for: {selected_location}")
 
-# 1. THE FOUNDATION (Must be the first Streamlit command)
-st.set_page_config(
-    page_title="Compass SoCal Trends", 
-    layout="wide",
-    initial_sidebar_state="expanded" 
-)
+# 6. MAIN CONTENT FILTERING
+# This logic ensures your charts update based on the selection
+if selected_location == "All Locations":
+    df_filtered = df_raw
+else:
+    df_filtered = df_raw[df_raw["Property Area"] == selected_location]
 
-# 2. THE PAINT & LOCKS (Interface Cleanup)
-# This hides the GitHub/Streamlit menus and locks the sidebar open
-hide_st_style = """
-            <style>
-            #MainMenu {visibility: hidden;} 
-            footer {visibility: hidden;}    
-            header {visibility: hidden;}    
-            .stAppDeployButton {display:none;} 
-            
-            /* Hides the 'X' and '>' collapse buttons */
-            [data-testid="sidebar-collapsed-control"],
-            button[kind="headerNoContext"] {
-                display: none;
-            }
-
-            /* Forces the sidebar to stay visible and un-collapsible */
-            [data-testid="stSidebar"] {
-                min-width: 250px !important;
-                max-width: 250px !important;
-                display: flex !important;
-            }
-
-            /* Moves your content up to the very top since header is gone */
-            .stAppViewMain {padding-top: 0rem;}
-            </style>
-            """
-st.markdown(hide_st_style, unsafe_allow_html=True)
-
-# 3. THE BRANDING (Your Logo)
-col1, _ = st.columns([1, 4])
-with col1:
-    logo_url = "https://raw.githubusercontent.com/onemilligram-ctrl/socal-real-estate-dashboard/main/Compass_Logo_H_W.png"
-    st.image(logo_url, width=200)
-
-st.markdown("---")
+# (Use 'df_filtered' for your charts below this line)
 
 # ... rest of your code (Data loading, Sidebar filters, etc.) ...
 
