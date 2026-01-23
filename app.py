@@ -14,10 +14,7 @@ st.set_page_config(
 # 2. Sidebar UI & Toggle Logic
 with st.sidebar:
     st.header("Dashboard Settings")
-    
-    # THE TOGGLE SWITCH
     dark_mode = st.toggle("Dark Mode", value=False)
-    
     st.markdown("---")
     st.header("Filters")
     
@@ -39,42 +36,32 @@ with st.sidebar:
     }
     df = pd.DataFrame(data)
     towns = sorted(df["Location"].unique())
-    selected_town = st.sidebar.selectbox("Select a Location:", ["All Towns"] + towns)
+    selected_town = st.selectbox("Select a Location:", ["All Towns"] + towns)
 
-# 3. Dynamic CSS & Global Color Control
+# 3. Theme-Based Variables (Colors & Logo)
 if dark_mode:
     bg_color = "#0E1117"
     text_color = "#FFFFFF"
     chart_template = "plotly_dark"
+    # Black Logo for Dark Mode
+    logo_url = "https://github.com/onemilligram-ctrl/socal-real-estate-dashboard/blob/main/Compass_Logo_Black_Horizontal%20Only.png?raw=true"
 else:
     bg_color = "#FFFFFF"
     text_color = "#000000"
     chart_template = "plotly_white"
+    # White Logo for Light Mode
+    logo_url = "https://raw.githubusercontent.com/onemilligram-ctrl/socal-real-estate-dashboard/main/Compass_Logo_H_W.png"
 
+# CSS Injection for Theme Control
 theme_css = f"""
     <style>
-    /* Global Background and Text */
     .stApp, .stApp p, .stApp h1, .stApp h2, .stApp h3, .stApp span, .stApp label {{
         background-color: {bg_color};
         color: {text_color} !important;
     }}
-    
-    /* Forces the Top Menu Bar (Header) to match theme */
-    header[data-testid="stHeader"] {{
-        background-color: {bg_color} !important;
-    }}
-
-    /* Sidebar Theme */
-    [data-testid="stSidebar"] {{
-        background-color: {bg_color};
-        border-right: 1px solid #444;
-    }}
-    
-    [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {{
-        color: {text_color} !important;
-    }}
-
-    /* UI Cleanliness */
+    header[data-testid="stHeader"] {{ background-color: {bg_color} !important; }}
+    [data-testid="stSidebar"] {{ background-color: {bg_color}; border-right: 1px solid #444; }}
+    [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {{ color: {text_color} !important; }}
     #MainMenu {{visibility: hidden;}} 
     footer {{visibility: hidden;}}    
     .stAppDeployButton {{display:none;}} 
@@ -83,49 +70,13 @@ theme_css = f"""
     """
 st.markdown(theme_css, unsafe_allow_html=True)
 
-# 4. Header & Branding
+# 4. Branding (Logo Swaps based on logo_url defined above)
 col1, _ = st.columns([1, 4])
 with col1:
-    logo_url = "https://raw.githubusercontent.com/onemilligram-ctrl/socal-real-estate-dashboard/main/Compass_Logo_H_W.png"
     st.image(logo_url, width=200)
 
 st.markdown("---")
 st.title("🏡 SoCal Open House Attendance Dashboard")
 
-# 5. Transform Data
+# 5. Data Processing & Filter
 df_melted = df.melt(id_vars=["Location"], var_name="Weekend", value_name="Attendance")
-
-# 6. Filtering Logic
-if selected_town == "All Towns":
-    filtered_df = df_melted
-else:
-    filtered_df = df_melted[df_melted["Location"] == selected_town]
-
-# 7. Chart
-fig = px.line(
-    filtered_df, 
-    x="Weekend", 
-    y="Attendance", 
-    color="Location", 
-    markers=True,
-    title=f"Attendance Trends: {selected_town}",
-    template=chart_template
-)
-
-fig.update_layout(
-    paper_bgcolor=bg_color,
-    plot_bgcolor=bg_color,
-    font=dict(color=text_color),
-    title=dict(font=dict(color=text_color)),
-    legend=dict(font=dict(color=text_color)),
-    xaxis=dict(gridcolor='#444' if dark_mode else '#eee', tickfont=dict(color=text_color)),
-    yaxis=dict(gridcolor='#444' if dark_mode else '#eee', tickfont=dict(color=text_color))
-)
-
-st.plotly_chart(fig, use_container_width=True)
-
-# 8. Automatic Timestamp
-st.markdown("---")
-tz = pytz.timezone('US/Pacific') 
-now = datetime.now(tz).strftime("%B %d, %Y at %I:%M %p")
-st.caption(f"App Last Refreshed: {now} PT")
