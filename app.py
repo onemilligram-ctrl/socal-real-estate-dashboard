@@ -41,7 +41,7 @@ with st.sidebar:
     towns = sorted(df["Location"].unique())
     selected_town = st.sidebar.selectbox("Select a Location:", ["All Towns"] + towns)
 
-# 3. Dynamic CSS & Global Font Color Control
+# 3. Dynamic CSS & Global Color Control
 if dark_mode:
     bg_color = "#0E1117"
     text_color = "#FFFFFF"
@@ -53,17 +53,28 @@ else:
 
 theme_css = f"""
     <style>
+    /* Global Background and Text */
     .stApp, .stApp p, .stApp h1, .stApp h2, .stApp h3, .stApp span, .stApp label {{
         background-color: {bg_color};
         color: {text_color} !important;
     }}
+    
+    /* Forces the Top Menu Bar (Header) to match theme */
+    header[data-testid="stHeader"] {{
+        background-color: {bg_color} !important;
+    }}
+
+    /* Sidebar Theme */
     [data-testid="stSidebar"] {{
         background-color: {bg_color};
         border-right: 1px solid #444;
     }}
+    
     [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {{
         color: {text_color} !important;
     }}
+
+    /* UI Cleanliness */
     #MainMenu {{visibility: hidden;}} 
     footer {{visibility: hidden;}}    
     .stAppDeployButton {{display:none;}} 
@@ -90,7 +101,7 @@ if selected_town == "All Towns":
 else:
     filtered_df = df_melted[df_melted["Location"] == selected_town]
 
-# 7. Chart (Responsive to Theme)
+# 7. Chart
 fig = px.line(
     filtered_df, 
     x="Weekend", 
@@ -101,28 +112,19 @@ fig = px.line(
     template=chart_template
 )
 
-# FORCE CHART FONT COLORS
 fig.update_layout(
     paper_bgcolor=bg_color,
     plot_bgcolor=bg_color,
-    font=dict(color=text_color), # Targets legend and global chart text
-    title=dict(font=dict(color=text_color)), # Specifically targets title
-    legend=dict(font=dict(color=text_color)), # Specifically targets legend
-    xaxis=dict(
-        title_font=dict(color=text_color),
-        tickfont=dict(color=text_color),
-        gridcolor='#444' if dark_mode else '#eee'
-    ),
-    yaxis=dict(
-        title_font=dict(color=text_color),
-        tickfont=dict(color=text_color),
-        gridcolor='#444' if dark_mode else '#eee'
-    )
+    font=dict(color=text_color),
+    title=dict(font=dict(color=text_color)),
+    legend=dict(font=dict(color=text_color)),
+    xaxis=dict(gridcolor='#444' if dark_mode else '#eee', tickfont=dict(color=text_color)),
+    yaxis=dict(gridcolor='#444' if dark_mode else '#eee', tickfont=dict(color=text_color))
 )
 
 st.plotly_chart(fig, use_container_width=True)
 
-# 8. Automatic Timestamp in Pacific Time
+# 8. Automatic Timestamp
 st.markdown("---")
 tz = pytz.timezone('US/Pacific') 
 now = datetime.now(tz).strftime("%B %d, %Y at %I:%M %p")
