@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from datetime import datetime
-import pytz
 
 # 1. Page Configuration
 st.set_page_config(
@@ -10,6 +8,10 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded" 
 )
+
+# --- MANUAL DATA UPDATE DATE ---
+# Update this string whenever you add new weekend data to the 'data' dictionary below
+LAST_DATA_UPDATE = "January 18, 2025" 
 
 # 2. Sidebar UI & Toggle Logic
 with st.sidebar:
@@ -36,20 +38,18 @@ with st.sidebar:
     }
     df = pd.DataFrame(data)
     towns = sorted(df["Location"].unique())
-    selected_town = st.sidebar.selectbox("Select a Location:", ["All Towns"] + towns)
+    selected_town = st.selectbox("Select a Location:", ["All Towns"] + towns)
 
-# 3. Theme-Based Variables (The Fix for Visibility)
+# 3. Theme-Based Variables
 if dark_mode:
     bg_color = "#0E1117"
     text_color = "#FFFFFF"
     chart_template = "plotly_dark"
-    # Use WHITE logo on DARK background
     logo_url = "https://raw.githubusercontent.com/onemilligram-ctrl/socal-real-estate-dashboard/main/Compass_Logo_H_W.png"
 else:
     bg_color = "#FFFFFF"
     text_color = "#000000"
     chart_template = "plotly_white"
-    # Use BLACK logo on WHITE background
     logo_url = "https://github.com/onemilligram-ctrl/socal-real-estate-dashboard/blob/main/Compass_Logo_Black_Horizontal%20Only.png?raw=true"
 
 # CSS Injection
@@ -82,10 +82,18 @@ st.title("🏡 SoCal Open House Attendance Dashboard")
 df_melted = df.melt(id_vars=["Location"], var_name="Weekend", value_name="Attendance")
 filtered_df = df_melted if selected_town == "All Towns" else df_melted[df_melted["Location"] == selected_town]
 
-# 6. Chart
-fig = px.line(filtered_df, x="Weekend", y="Attendance", color="Location", markers=True,
-              title=f"Attendance Trends: {selected_town}", template=chart_template)
+# 6. Chart Logic
+fig = px.line(
+    filtered_df, 
+    x="Weekend", 
+    y="Attendance", 
+    color="Location", 
+    markers=True,
+    title=f"Attendance Trends: {selected_town}", 
+    template=chart_template
+)
 
+# 7. Chart Refinement
 fig.update_layout(
     paper_bgcolor=bg_color, 
     plot_bgcolor=bg_color, 
@@ -95,10 +103,9 @@ fig.update_layout(
     xaxis=dict(gridcolor='#444' if dark_mode else '#eee', tickfont=dict(color=text_color), title_font=dict(color=text_color)),
     yaxis=dict(gridcolor='#444' if dark_mode else '#eee', tickfont=dict(color=text_color), title_font=dict(color=text_color))
 )
+
 st.plotly_chart(fig, use_container_width=True)
 
-# 7. Timestamp
+# 8. Static Timestamp
 st.markdown("---")
-tz = pytz.timezone('US/Pacific') 
-now = datetime.now(tz).strftime("%B %d, %Y at %I:%M %p")
-st.caption(f"App Last Refreshed: {now} PT")
+st.caption(f"Data Last Updated: {LAST_DATA_UPDATE}")
