@@ -36,23 +36,23 @@ with st.sidebar:
     }
     df = pd.DataFrame(data)
     towns = sorted(df["Location"].unique())
-    selected_town = st.selectbox("Select a Location:", ["All Towns"] + towns)
+    selected_town = st.sidebar.selectbox("Select a Location:", ["All Towns"] + towns)
 
-# 3. Theme-Based Variables (Colors & Logo)
+# 3. Theme-Based Variables (The Fix for Visibility)
 if dark_mode:
     bg_color = "#0E1117"
     text_color = "#FFFFFF"
     chart_template = "plotly_dark"
-    # Black Logo for Dark Mode
-    logo_url = "https://github.com/onemilligram-ctrl/socal-real-estate-dashboard/blob/main/Compass_Logo_Black_Horizontal%20Only.png?raw=true"
+    # Use WHITE logo on DARK background
+    logo_url = "https://raw.githubusercontent.com/onemilligram-ctrl/socal-real-estate-dashboard/main/Compass_Logo_H_W.png"
 else:
     bg_color = "#FFFFFF"
     text_color = "#000000"
     chart_template = "plotly_white"
-    # White Logo for Light Mode
-    logo_url = "https://raw.githubusercontent.com/onemilligram-ctrl/socal-real-estate-dashboard/main/Compass_Logo_H_W.png"
+    # Use BLACK logo on WHITE background
+    logo_url = "https://github.com/onemilligram-ctrl/socal-real-estate-dashboard/blob/main/Compass_Logo_Black_Horizontal%20Only.png?raw=true"
 
-# CSS Injection for Theme Control
+# CSS Injection
 theme_css = f"""
     <style>
     .stApp, .stApp p, .stApp h1, .stApp h2, .stApp h3, .stApp span, .stApp label {{
@@ -70,7 +70,7 @@ theme_css = f"""
     """
 st.markdown(theme_css, unsafe_allow_html=True)
 
-# 4. Branding (Logo Swaps based on logo_url defined above)
+# 4. Branding
 col1, _ = st.columns([1, 4])
 with col1:
     st.image(logo_url, width=200)
@@ -80,3 +80,25 @@ st.title("🏡 SoCal Open House Attendance Dashboard")
 
 # 5. Data Processing & Filter
 df_melted = df.melt(id_vars=["Location"], var_name="Weekend", value_name="Attendance")
+filtered_df = df_melted if selected_town == "All Towns" else df_melted[df_melted["Location"] == selected_town]
+
+# 6. Chart
+fig = px.line(filtered_df, x="Weekend", y="Attendance", color="Location", markers=True,
+              title=f"Attendance Trends: {selected_town}", template=chart_template)
+
+fig.update_layout(
+    paper_bgcolor=bg_color, 
+    plot_bgcolor=bg_color, 
+    font=dict(color=text_color),
+    title=dict(font=dict(color=text_color)), 
+    legend=dict(font=dict(color=text_color)),
+    xaxis=dict(gridcolor='#444' if dark_mode else '#eee', tickfont=dict(color=text_color), title_font=dict(color=text_color)),
+    yaxis=dict(gridcolor='#444' if dark_mode else '#eee', tickfont=dict(color=text_color), title_font=dict(color=text_color))
+)
+st.plotly_chart(fig, use_container_width=True)
+
+# 7. Timestamp
+st.markdown("---")
+tz = pytz.timezone('US/Pacific') 
+now = datetime.now(tz).strftime("%B %d, %Y at %I:%M %p")
+st.caption(f"App Last Refreshed: {now} PT")
