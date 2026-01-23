@@ -1,20 +1,31 @@
-# 5. SIDEBAR FILTERS
-with st.sidebar:
-    st.header("Dashboard Filters")
-    
-    # 1. Get a unique, sorted list of locations from your 'Property Area' column
-    # We add "All Locations" at the top as the default view
-    location_list = ["All Locations"] + sorted(df_raw["Property Area"].unique().tolist())
-    
-    # 2. Create the dropdown menu
-    selected_location = st.selectbox(
-        "Select a Neighborhood:",
-        options=location_list,
-        index=0 # Sets 'All Locations' as the default
-    )
-    
-    st.markdown("---")
-    st.caption(f"Showing results for: {selected_location}")
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+from datetime import datetime
+import pytz # Handles the timezone
+
+# 1. Setup
+st.set_page_config(page_title="Compass SoCal Trends", layout="wide")
+
+# 2. Hide Streamlit/GitHub elements (Clean look)
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;} 
+            footer {visibility: hidden;}    
+            header {visibility: hidden;}    
+            .stAppDeployButton {display:none;} 
+            .stAppViewMain {padding-top: 0rem;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
+
+# 3. Branding
+col1, _ = st.columns([1, 4])
+with col1:
+    logo_url = "https://raw.githubusercontent.com/onemilligram-ctrl/socal-real-estate-dashboard/main/Compass_Logo_H_W.png"
+    st.image(logo_url, width=200)
+
+st.markdown("---")
 
 # 6. MAIN CONTENT FILTERING
 # This logic ensures your charts update based on the selection
