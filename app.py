@@ -86,7 +86,7 @@ filtered_df = df_melted if selected_town == "All Towns" else df_melted[df_melted
 fig = px.line(
     filtered_df, 
     x="Weekend", 
-    y="Attendance", 
+    y="Average Attendance", 
     color="Location", 
     markers=True,
     title=f"Attendance Trends: {selected_town}", 
